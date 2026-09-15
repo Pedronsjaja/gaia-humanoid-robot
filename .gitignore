@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+
+# Ambiente local e resultados de bancada
+servos.json
+resultados/
+resultados_lx225/
+*.csv
+*.png
+
+# Configuracoes locais do editor
+.vscode/
+.idea/
+
+# Arquivos temporarios
+*.tmp
+*.bak

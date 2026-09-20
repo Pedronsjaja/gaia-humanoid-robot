@@ -137,6 +137,6 @@ protocolo de comunicacao dos drivers.
 
 ## Guias complementares da equipe
 
-[Programação](programacao/README.md) · [Simulação OP3](simulacao/README.md) · [Modelo Gaia](simulacao/modelo-gaia.md) · [Autonomia](simulacao/autonomia.md) · [CBR Humanoid](competicao/README.md).
+[Programação](https://github.com/Pedronsjaja/gaia-humanoid-simulation/blob/main/docs/programacao/README.md) · [Simulação OP3](https://github.com/Pedronsjaja/gaia-humanoid-simulation/blob/main/docs/simulacao/README.md) · [Modelo Gaia](https://github.com/Pedronsjaja/gaia-humanoid-structure/blob/main/docs/modelo-gaia.md) · [Autonomia](https://github.com/Pedronsjaja/gaia-humanoid-simulation/blob/main/docs/simulacao/autonomia.md) · [CBR Humanoid](https://github.com/Pedronsjaja/gaia-humanoid-structure/blob/main/docs/competicao/README.md).
 
 A bancada serial é a base para a futura integração ROS/LX-225. O adaptador OP3 de simulação não implementa essa ponte e não substitui a caracterização dos atuadores reais.

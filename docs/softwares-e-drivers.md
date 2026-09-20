@@ -12,7 +12,6 @@
 | Bus Servo Terminal | Consultar/configurar servos padrão com interface gráfica | Opcional para usar Python |
 | ServoStudio | Ferramenta citada no manual V3 para servos magnéticos compatíveis | Não é requisito do LX-225 |
 | VS Code | Editor e terminal | Opcional |
-| PlatformIO | Compilar/gravar diagnóstico do joystick | Só para o firmware ESP32-S3 |
 
 **V2.5/V3.0 identificam placas. V2.3 identifica uma versão do Bus Servo Terminal.** Os números não precisam coincidir. Para LX-225, use comunicação a **115200 baud**, conforme [especificação do servo](https://www.hiwonder.com/products/lx-225); não copie os exemplos a 1 Mbaud dos servos magnéticos.
 
@@ -23,7 +22,6 @@
 - [Pacote de software/driver V2.5](https://drive.google.com/drive/folders/1XJZ8-vH_Ird9maY-G4CtM7BUNHgw-TGg): pastas BusLinker Debug Board Drive e BusLinker Debug Board Software.
 - [Pacote de softwares V3](https://drive.google.com/drive/folders/1pvLu30CD031MmmyniB1jsr8tejrHD9rp).
 - [Bus Servo Terminal setup V2.3.exe — arquivo no pacote oficial V3](https://drive.google.com/file/d/14IyadBqcuB1EVzPrle2UwC0VONXBObUK/view).
-- [PlatformIO para VS Code](https://platformio.org/install/ide?install=vscode), usado pelo [guia do joystick](joystick.md).
 
 Os pacotes são vinculados pelo [site Hiwonder da placa TTL/USB](https://www.hiwonder.com/products/hiwonder-ttl-usb-debugging-board) e pela [documentação BusLinker V3](https://docs.hiwonder.com/projects/BusLinker/en/latest/). Instaladores permanecem na distribuição oficial; não são executados automaticamente por este repositório.
 
@@ -48,14 +46,6 @@ Esses passos seguem o [manual V2.5](datasheets/buslinker-v2.5-manual.pdf). Para 
 
 Para posições dos jumpers e telas, consulte os [manuais locais](datasheets/README.md). O [manual V3](https://docs.hiwonder.com/projects/BusLinker/en/latest/docs/1_BusLinker_V3.0_Servo_Debugging_Board_User_Manual.html) separa servos padrão de servos magnéticos: use a seção **Standard Servo** como referência do software para LX-225. Não grave firmware de outro modelo no servo.
 
-## Abrir os arquivos mecânicos
+## Estrutura e CAD
 
-| Formato | Uso |
-| --- | --- |
-| SLDASM + SLDPRT | Montagem e peças nativas SolidWorks |
-| IPT | Peças nativas Autodesk Inventor |
-| STEP/STP | Intercâmbio CAD; pode ser aberto em ferramentas como FreeCAD |
-| STL | Malha para fatiador de impressão 3D; confira escala e dimensões |
-| PNG/AVIF | Referências visuais; não são modelos CAD |
-
-Consulte [SolidWorks](https://www.solidworks.com/), [Inventor](https://www.autodesk.com/products/inventor/overview) e [FreeCAD](https://www.freecad.org/). A versão de gravação dos arquivos nativos não foi identificada. Não foi feita conversão automática de formatos. Veja o [catálogo](../hardware/README.md).
+Para abrir o CAD do servo e editar suportes, consulte [softwares CAD no repositório de estrutura](https://github.com/Pedronsjaja/gaia-humanoid-structure/blob/main/docs/softwares-cad.md).

@@ -29,7 +29,7 @@ O **README** é a página inicial do projeto, mostrada abaixo da lista de arquiv
 **Clone:** quem vai trabalhar com Git pode usar:
 
 ```bash
-git clone https://github.com/Pedronsjaja/gaia-humanoid-robot.git
+git clone https://github.com/Pedronsjaja/gaia-lx225-buslinker.git
 ```
 
 O clone inclui histórico e permite atualizar/enviar alterações; o ZIP não. Para atualizar um clone sem mudanças locais pendentes, use `git pull --ff-only`. Se houver erro, consulte o responsável; não apague sua pasta ou force a atualização.
@@ -62,7 +62,7 @@ O indicador verde em Actions significa que aqueles testes passaram; não certifi
 | Perfil | Primeiro caminho |
 | --- | --- |
 | Nunca usei Linux/ROS | [Ambiente Ubuntu/ROS 2](https://github.com/Pedronsjaja/gaia-ros2-ubuntu24) |
-| Vou programar o robô | [Programação](programacao/README.md) |
-| Vou desenhar/imprimir peças | [Estrutura](estrutura/README.md) |
+| Vou programar o robô | [Programação](https://github.com/Pedronsjaja/gaia-humanoid-simulation/blob/main/docs/programacao/README.md) |
+| Vou desenhar/imprimir peças | [Estrutura](https://github.com/Pedronsjaja/gaia-humanoid-structure/blob/main/docs/estrutura/README.md) |
 | Vou ligar placas e servos | [Eletrônica](eletronica/README.md) |
-| Vou organizar a participação na CBR | [Competição](competicao/README.md) |
+| Vou organizar a participação na CBR | [Competição](https://github.com/Pedronsjaja/gaia-humanoid-structure/blob/main/docs/competicao/README.md) |

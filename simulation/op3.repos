@@ -1,6 +1,0 @@
-# Modelo oficial, revisão inspecionada em 2026-09-20.
-repositories:
-  ROBOTIS-OP3-Common:
-    type: git
-    url: https://github.com/ROBOTIS-GIT/ROBOTIS-OP3-Common.git
-    version: 6f7d56ccef6f78061925c56c6bd9d134d243f911

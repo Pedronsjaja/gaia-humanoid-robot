@@ -1,103 +1,66 @@
-# Gaia — humanoide para futebol de robôs
+# Gaia — LX-225 e BusLinker V2.5 / V3
 
-Este é o ponto de encontro da equipe **Gaia** para desenvolver um humanoide com servos **LX-225**, estudar o **ROBOTIS OP3** e avançar rumo à autonomia na **CBR, categoria Humanoid**.
+Bancada e biblioteca Python para o **servo Hiwonder LX-225** com **BusLinker V2.5 ou V3**: comunicação, consulta de posição/tensão/temperatura, movimentos de teste, gráficos, IDs e calibração.
 
-**Novo no GitHub?** Comece pelo [guia de navegação](docs/primeiros-passos-github.md). Você pode ler tudo pelo navegador: clique nos links e nas pastas; o README é a página inicial de cada área.
+## Comece aqui
 
-## Escolha sua área
-
-| Área | Comece aqui | O que você encontrará |
-| --- | --- | --- |
-| Programação | [Trilha de programação](docs/programacao/README.md) | Python, ROS 2, simulação, sensores e autonomia |
-| Estrutura | [Trilha de estrutura](docs/estrutura/README.md) | CAD do servo LX-224/LX-225, suportes, fabricação e modelo do robô |
-| Eletrônica | [Trilha de eletrônica](docs/eletronica/README.md) | BusLinker V2.5/V3, alimentação, drivers e diagnóstico |
-| Competição | [CBR Humanoid](docs/competicao/README.md) | Regulamentos, limitações e requisitos pendentes |
-
-## Roteiro para entrar na equipe
-
-1. Leia o [guia GitHub](docs/primeiros-passos-github.md): baixar arquivos, acompanhar alterações e registrar dúvidas.
-2. Conheça os [objetivos e etapas da autonomia](docs/simulacao/autonomia.md).
-3. Para programação ROS, prepare o computador pelo repositório separado [Gaia — Ubuntu 24.04 e ROS 2 Jazzy](https://github.com/Pedronsjaja/gaia-ros2-ubuntu24). Ele explica dual boot e máquina virtual.
-4. Volte aqui e faça o [laboratório OP3 no Gazebo Harmonic](docs/simulacao/instalacao-e-laboratorio.md): carregar o modelo, comandar a cabeça, ler câmera e IMU.
-5. Para trabalho físico, siga primeiro a [instalação da bancada com um servo](docs/instalacao.md).
-6. Antes de fechar dimensões ou comprar sensores, consulte a [matriz de requisitos da CBR](docs/competicao/matriz-requisitos.md).
-
-## Acesso rápido
+1. Leia [como usar o GitHub](docs/primeiros-passos-github.md), se esta for sua primeira visita.
+2. Siga a [instalação e primeiro teste](docs/instalacao.md), começando com um único servo.
+3. Confira os [manuais e esquemas](docs/datasheets/README.md) da sua placa.
+4. Use o [manual de comandos](docs/uso.md) e registre os resultados da bancada.
 
 | Quero… | Abrir |
 | --- | --- |
-| Instalar e usar BusLinker V2.5 ou V3 | [Instalação](docs/instalacao.md) · [Comandos Python](docs/uso.md) |
-| Datasheets, manuais e esquemas | [Documentação técnica](docs/datasheets/README.md) |
-| Softwares Hiwonder e drivers USB | [Downloads e instalação](docs/softwares-e-drivers.md) |
-| Resolver erros de comunicação/movimento | [Solução de problemas](docs/solucao-de-problemas.md) |
-| CAD e suportes para impressão | [Catálogo mecânico](hardware/README.md) |
-| Simular no Linux | [Simulação](docs/simulacao/README.md) |
-| Entender como criar o modelo Gaia | [CAD → URDF → simulação](docs/simulacao/modelo-gaia.md) |
-| Integrar LX-225 | [Arquitetura de atuadores](docs/gaia_lx225.md) |
-| Joystick e OLED ESP32-S3 | [Guia do joystick](docs/joystick.md) |
-| Consultar regras e documentos locais | [Competição e fontes](docs/competicao/fontes.md) |
+| Instalar Python, ligar a placa e identificar a porta | [Instalação](docs/instalacao.md) |
+| Manuais V2.5/V3 e ficha LX-225 | [Documentação técnica](docs/datasheets/README.md) |
+| Software Hiwonder e driver USB | [Softwares e drivers](docs/softwares-e-drivers.md) |
+| Consultar sensores, mover ou calibrar | [Comandos Python](docs/uso.md) |
+| Resolver erros | [Solução de problemas](docs/solucao-de-problemas.md) |
+| Conferir alimentação e barramento | [Eletrônica do LX-225](docs/eletronica/README.md) |
+| Reutilizar a biblioteca no robô | [Interface dos atuadores](docs/gaia_lx225.md) |
+| Baixar CAD do servo e suportes | [Catálogo no repositório de estrutura](https://github.com/Pedronsjaja/gaia-humanoid-structure/blob/main/hardware/README.md) |
 
-## O que já existe e o que ainda falta
+## Qual programa usar?
 
-| Parte | Estado |
-| --- | --- |
-| Bancada Python LX-225 | Comunicação, sensores, gráficos, IDs e calibração; testes de software com serial simulada |
-| BusLinker | Programas independentes [V2.5](buslinker_v2_5.py) e [V3](buslinker_v3.py), documentação e diagnóstico |
-| Estrutura | CAD compartilhado LX-224/LX-225 e suportes catalogados em [hardware](hardware/README.md) |
-| Simulação | Adaptador didático OP3 com base presa, controladores e sensores; conferir [validação e versões](docs/simulacao/referencias.md) |
-| Modelo completo Gaia | Ainda precisa de montagem, massas, inércias, eixos e limites medidos |
-| Autonomia | Plano de evolução; percepção de futebol, equilíbrio, marcha e ponte ROS/LX-225 ainda precisam ser implementados |
-| CBR | Categoria Humanoid escolhida; subcategoria, edição e regulamento aplicável pendentes |
+| Placa | Programa independente | Classe |
+| --- | --- | --- |
+| BusLinker V2.5 | [buslinker_v2_5.py](buslinker_v2_5.py) | `BusLinkerV2_5` |
+| BusLinker V3 | [buslinker_v3.py](buslinker_v3.py) | `BusLinkerV3` |
 
-O OP3 é referência de estudo. Seus atuadores DYNAMIXEL, massas e controladores não equivalem automaticamente ao Gaia com LX-225. O laboratório inicial suspende o robô para aprender comandos e sensores; ele não demonstra marcha nem habilitação para competir.
+Instale as dependências de [requirements.txt](requirements.txt). Os dois programas usam o protocolo LX-225 a 115200 baud. Confira o comando da sua revisão no tutorial; V3 não significa compatibilidade com qualquer protocolo de servo.
 
-## Como as partes se conectam
+Comece consultando o estado. Antes de mover, confirme ID, alimentação, limites e percurso mecânico. A referência elétrica e as diferenças entre tensão da placa e do servo estão nos [manuais](docs/datasheets/README.md).
 
-```mermaid
-flowchart LR
-    Sensores[Câmera, IMU e juntas] --> ROS[ROS 2: mensagens e ferramentas]
-    ROS --> Autonomia[Percepção, estado e decisão]
-    Autonomia --> Movimento[Planejamento, equilíbrio e movimento]
-    Movimento --> Sim[Gazebo: robô virtual]
-    Movimento --> Ponte[Ponte ROS para LX-225: a desenvolver]
-    Ponte --> Placa[BusLinker e servos]
-    Estrutura[Estrutura e parâmetros medidos] --> Sim
-    Estrutura --> Placa
-```
-
-O **Gazebo** simula física e sensores. O **ROS 2** conecta programas, organiza mensagens e oferece ferramentas de inspeção. A equipe desenvolve os algoritmos que percebem o jogo e escolhem ações. Veja os [marcos de autonomia](docs/simulacao/autonomia.md).
-
-## Onde estão os arquivos?
+## Organização
 
 ```text
-docs/
-  primeiros-passos-github.md
-  programacao/         # Trilha de software
-  estrutura/           # Trilha mecânica
-  eletronica/          # Trilha eletrônica
-  simulacao/           # Instalação, modelo e autonomia
-  competicao/          # CBR, fontes e matriz de requisitos
-  datasheets/          # Manuais e esquemas
-hardware/              # CAD e suportes originais, com catálogo
-ros2/gaia_op3_sim/      # Pacote do laboratório virtual
-simulation/op3.repos   # Revisão fixa do modelo ROBOTIS
-firmware/              # Diagnóstico joystick/OLED
-tests/                 # Testes dos scripts de bancada
-tools/                 # Diagnóstico e geração dos programas
-buslinker_v2_5.py       # Programa independente V2.5
-buslinker_v3.py         # Programa independente V3
+buslinker_v2_5.py       Programa completo V2.5
+buslinker_v3.py         Programa completo V3
+servo_testbench.py     Comunicação compartilhada
+bench_tools.py         Gráficos, IDs e calibração
+test_servos.py         Interface da bancada
+docs/                  Instalação, uso, manuais e diagnóstico
+tests/                 Testes com serial simulada
+tools/                 Diagnóstico e geração dos programas
 ```
 
-Os arquivos 3D do humanoide ficam neste repositório, junto da documentação e das interfaces mecânicas. O ambiente Ubuntu/ROS 2 fica em outro repositório porque serve a vários projetos da equipe. Baixe a montagem CAD com suas dependências, conforme o catálogo.
-
-## Como colaborar
-
-Use **Issues** para dúvidas, defeitos e tarefas; informe sua área, objetivo, revisão, passos e evidências. Para propor mudanças, crie uma branch e uma **Pull Request**. O [guia GitHub](docs/primeiros-passos-github.md) explica esses termos e mostra o caminho.
-
-Validação da bancada, sem conectar servos:
+Para desenvolver, altere as fontes compartilhadas e gere novamente os programas independentes com `python tools/build_standalone.py`.
 
 ```powershell
 python -m unittest discover -s tests -v
 ```
 
-Os programas autônomos são gerados a partir de `servo_testbench.py`, `bench_tools.py` e `test_servos.py` por `python tools/build_standalone.py`. Testes de software não substituem ensaios elétricos, mecânicos ou a inspeção da competição.
+Os testes de software não certificam a montagem elétrica ou mecânica. Corrente e torque não são medidos por este driver; a velocidade exibida é estimada entre leituras.
+
+## Repositórios da equipe Gaia
+
+| Preciso de… | Repositório |
+| --- | --- |
+| Servo LX-225, BusLinker, drivers e testes de bancada | [LX-225 / BusLinker](https://github.com/Pedronsjaja/gaia-lx225-buslinker) |
+| Gazebo, OP3, ROS 2 e autonomia | [Simulação](https://github.com/Pedronsjaja/gaia-humanoid-simulation) |
+| CAD, suportes, montagem e requisitos físicos da CBR | [Estrutura](https://github.com/Pedronsjaja/gaia-humanoid-structure) |
+| Instalar Ubuntu 24.04 e ROS 2 Jazzy | [Ambiente Linux / ROS 2](https://github.com/Pedronsjaja/gaia-ros2-ubuntu24) |
+
+Cada repositório tem seus próprios arquivos, Issues e histórico. Abra dúvidas na área correspondente; inclua links quando uma mudança depender de outra área.
+
+O antigo repositório `gaia-humanoid-robot` foi renomeado para este endereço. Simulação e arquivos mecânicos passaram para os repositórios acima; o histórico anterior permanece preservado.

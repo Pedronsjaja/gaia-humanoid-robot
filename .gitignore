@@ -13,10 +13,12 @@ resultados/
 resultados_lx225/
 *.csv
 *.png
+!hardware/**/*.png
 
 # Configuracoes locais do editor
 .vscode/
 .idea/
+.pio/
 
 # Arquivos temporarios
 *.tmp

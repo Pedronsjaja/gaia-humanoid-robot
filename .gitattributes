@@ -1,0 +1,20 @@
+# Portable source and documentation line endings.
+*.py text eol=lf
+*.md text eol=lf
+*.ini text eol=lf
+*.cpp text eol=lf
+*.json text eol=lf
+*.txt text eol=lf
+.gitignore text eol=lf
+.gitattributes text eol=lf
+# Preserve original mechanical assets byte for byte.
+*.stp binary
+*.step binary
+*.stl binary
+*.ipt binary
+*.SLDPRT binary
+*.SLDASM binary
+*.pdf binary
+*.png binary
+*.jpg binary
+*.avif binary

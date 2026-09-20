@@ -1,225 +1,134 @@
-# Gaia — atuadores LX-225 com BusLinker V2.5/V3
+# Gaia â€” servos LX-225, BusLinker e peÃ§as mecÃ¢nicas
 
-Módulo de baixo nível do robô humanoide Gaia para controlar e caracterizar
-servos LX-225 no mesmo barramento serial. Os parâmetros monitorados são: ID
-físico, identificador do atuador, posição angular, velocidade angular calculada,
-tensão e temperatura.
+Ferramentas de bancada dos atuadores do humanoide **Gaia**: controle Python de servos Hiwonder LX-225 com BusLinker V2.5 ou V3.0, leitura de sensores, grÃ¡ficos, configuraÃ§Ã£o de IDs, calibraÃ§Ã£o e arquivos mecÃ¢nicos.
 
-A documentação específica da integração está em
-[`docs/gaia_lx225.md`](docs/gaia_lx225.md).
+**Comece com um Ãºnico servo:** confirme a comunicaÃ§Ã£o, teste um movimento pequeno e sÃ³ depois monte o barramento com vÃ¡rios IDs.
 
-## Instalação
+## Encontre o que vocÃª precisa
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-python -c "from servo_testbench import LX225Bus; print('módulo carregado')"
+| Queroâ€¦ | Abrir |
+| --- | --- |
+| Instalar do zero e identificar a porta USB | [Tutorial de instalaÃ§Ã£o](docs/instalacao.md) |
+| Baixar datasheets, manuais e esquemas | [DocumentaÃ§Ã£o tÃ©cnica V2.5, V3 e LX-225](docs/datasheets/README.md) |
+| Instalar software Hiwonder ou driver USB | [Softwares e drivers](docs/softwares-e-drivers.md) |
+| Ler sensores, mover, gerar grÃ¡ficos ou calibrar | [Manual dos comandos Python](docs/uso.md) |
+| Resolver erros de comunicaÃ§Ã£o ou movimento | [SoluÃ§Ã£o de problemas](docs/solucao-de-problemas.md) |
+| Baixar CAD LX-224/LX-225 e suportes | [CatÃ¡logo mecÃ¢nico](hardware/README.md) |
+| Integrar os atuadores no humanoide | [Arquitetura Gaia](docs/gaia_lx225.md) |
+| Montar joystick e display ESP32-S3 | [Guia do joystick](docs/joystick.md) |
+
+## Como funciona
+
+```mermaid
+flowchart LR
+    PC[Computador com Python] -->|USB de dados| B[BusLinker V2.5 ou V3.0]
+    F[Fonte externa para LX-225] -->|AlimentaÃ§Ã£o| B
+    B <-->|Barramento TTL| S1[Servo ID 1]
+    S1 <-->|Mesmo barramento| S2[Servo ID 2]
 ```
 
-Feche o Bus Servo Terminal/ServoStudio antes de executar. Cada servo deve ter ID diferente.
+A **BusLinker** conecta o computador ao barramento. O **driver USB** faz aparecer a porta COM no sistema. Os **scripts Python** enviam comandos pela porta; cada servo tem um ID. O LX-225 recebe comandos seriais, nÃ£o pulsos de um controlador de servo PWM convencional.
 
-Escolha o arquivo conforme sua placa:
+**Alimente o LX-225 com 6â€“8,4 V.** A corrente de travamento informada Ã© 4 A por servo: considere picos simultÃ¢neos, cabos e conectores ao dimensionar a alimentaÃ§Ã£o. A tensÃ£o mÃ¡xima aceita pela placa nÃ£o Ã© a tensÃ£o mÃ¡xima do servo. [EspecificaÃ§Ãµes Hiwonder](https://www.hiwonder.com/products/lx-225).
 
-| Placa | Arquivo | Classe Python |
+## Primeiro teste no Windows
+
+VocÃª precisa de uma BusLinker, um LX-225, cabo de servo, cabo USB **de dados**, fonte apropriada e Python. O [tutorial completo](docs/instalacao.md) explica as conexÃµes e a instalaÃ§Ã£o.
+
+1. Baixe o repositÃ³rio em **Code â†’ Download ZIP** e extraia tudo, ou clone pelo endereÃ§o mostrado em **Code**. Abra um terminal na pasta deste README.
+2. Crie o ambiente e instale as dependÃªncias:
+
+   ```powershell
+   python -m venv .venv
+   .\.venv\Scripts\python.exe -m pip install -r requirements.txt
+   ```
+
+3. Com a alimentaÃ§Ã£o desligada, conecte um servo e confira polaridade, conector e seleÃ§Ã£o USB da sua revisÃ£o. Ligue a fonte e conecte o USB. Feche os outros programas que usam a serial e identifique a porta:
+
+   ```powershell
+   .\.venv\Scripts\python.exe -m serial.tools.list_ports -v
+   ```
+
+4. Substitua `COM7` pela porta identificada e execute **apenas o comando da sua placa**:
+
+   ```powershell
+   # BusLinker V2.5 â€” somente leitura
+   .\.venv\Scripts\python.exe buslinker_v2_5.py --port COM7 --scan
+   # BusLinker V3.0 â€” somente leitura
+   .\.venv\Scripts\python.exe buslinker_v3.py --port COM7 --scan
+   ```
+
+A busca percorre IDs de 0 a 253 e mostra os que responderam, com posiÃ§Ã£o, tensÃ£o e temperatura. Se nada responder, siga o [diagnÃ³stico](docs/solucao-de-problemas.md). IDs duplicados nÃ£o permitem contar separadamente os servos fÃ­sicos.
+
+5. Confira o percurso mecÃ¢nico antes de mover. Exemplo para **ID 1 e V3**:
+
+   ```powershell
+   .\.venv\Scripts\python.exe buslinker_v3.py --port COM7 --ids 1 --move --delta 5 --seconds 2
+   ```
+
+Isso solicita **+5Â° a partir da posiÃ§Ã£o atual**, em 2 segundos, sem retorno automÃ¡tico. O teste verifica modo de posiÃ§Ã£o, limites e tensÃ£o; pode habilitar torque. `Ctrl+C` tenta parar o servo, mas uma falha de comunicaÃ§Ã£o pode impedir a parada. Fechar o programa nÃ£o desliga o torque.
+
+## Qual arquivo executar?
+
+| Placa | Arquivo autÃ´nomo | Classe para importar |
 | --- | --- | --- |
-| BusLinker V2.5 | `buslinker_v2_5.py` | `BusLinkerV2_5` |
-| BusLinker V3 | `buslinker_v3.py` | `BusLinkerV3` |
+| BusLinker V2.5 | [buslinker_v2_5.py](buslinker_v2_5.py) | `BusLinkerV2_5` |
+| BusLinker V3.0 | [buslinker_v3.py](buslinker_v3.py) | `BusLinkerV3` |
 
-**Cada arquivo agora e completo e autonomo:** inclui driver, monitoramento,
-graficos, cadastro/troca de IDs e calibracao com ajuste de offset. Para usar,
-copie apenas o arquivo da sua placa e instale `pyserial` e `matplotlib`.
-Nao precisa copiar os outros arquivos Python. V3 corresponde a placa V3.0.
-O antigo `buslinler_v2.5.py` foi renomeado para `buslinker_v2_5.py`.
-O sublinhado em `v2_5` permite importar o módulo normalmente em Python.
-Use Python 3.9 ou superior.
+Cada arquivo inclui comunicaÃ§Ã£o, menu, grÃ¡ficos, IDs e calibraÃ§Ã£o. Pode ser copiado sozinho, desde que `pyserial` e `matplotlib` estejam instalados. Os dois usam o protocolo LX-225 a **115200 baud**. O nome V3 nÃ£o ativa protocolos de outros modelos de servo.
 
-## Teste de bancada
-
-### Monitoramento e gráficos
-
-Instale também a dependência de gráficos: `python -m pip install -r requirements.txt`.
-Todos os comandos abaixo funcionam nas duas placas: para V3, substitua
-`buslinker_v2_5.py` por `buslinker_v3.py`.
+Com o ambiente virtual ativo, exemplos para V3:
 
 ```powershell
-python buslinker_v2_5.py monitor --port COM7 --ids 1 2 --duration 30 --live
+# Menu de consulta e movimento solicitado pelo usuÃ¡rio
+python buslinker_v3.py --interactive --port COM7 --ids 1
+# GrÃ¡ficos e CSV, sem movimentar
+python buslinker_v3.py monitor --port COM7 --ids 1 --duration 30 --live
+# Nome local da junta; nÃ£o muda o ID fÃ­sico
+python buslinker_v3.py add-id --id 1 --name joelho_esquerdo
 ```
 
-Mostra posição (graus), velocidade estimada (graus/s), tensão (V) e temperatura
-(°C). `--live` abre quatro gráficos durante a coleta; sem ele, os gráficos são
-gerados ao final. Cada execução cria uma subpasta com data/hora em `resultados/`,
-contendo `telemetria.csv` e `graficos.png`. Use `--output outra_pasta` para mudar
-o destino. Ctrl+C preserva os dados já coletados. Falhas de leitura aparecem no
-CSV e como lacunas nos gráficos, sem inventar valores. O código de saída é 1
-se houve falha de leitura. O monitor apenas lê, não movimenta nem para servos.
+O monitor salva dados em `resultados/`; os nomes ficam em `servos.json`. Ambos sÃ£o locais e ignorados pelo Git. Veja [uso avanÃ§ado](docs/uso.md) para troca de ID fÃ­sico, calibraÃ§Ã£o, offset e sincronizaÃ§Ã£o.
 
-`--interval 0.1` define a pausa entre rodadas; a taxa real inclui o tempo das
-leituras e dos gráficos. Os sensores são lidos sequencialmente. O tempo registrado
-é o da leitura de posição. A primeira velocidade é NaN, por faltar amostra anterior.
+## CAD e suportes
 
-### Cadastrar IDs manualmente e editar nomes
+O [catÃ¡logo mecÃ¢nico](hardware/README.md) reÃºne o CAD compartilhado LX-224/LX-225 informado pelo mantenedor, a montagem SolidWorks e os suportes em Inventor, STEP e STL.
 
-```powershell
-python buslinker_v2_5.py add-id --id 1 --name quadril
-python buslinker_v2_5.py add-id --id 2 --name joelho
-python buslinker_v2_5.py list-ids
+- **Montagem do servo:** [CAD LX-224/LX-225](hardware/cad/servo-lx224-lx225/).
+- **Imprimir suportes:** [STL](hardware/suportes/gaia-3d/STL/).
+- **Adaptar em CAD:** [STEP](hardware/suportes/gaia-3d/STEP/).
+- **PeÃ§as nativas:** [Inventor Gaia 3D](hardware/suportes/gaia-3d/IPT/) e [peÃ§as LX-225](hardware/suportes/pecas-lx225/).
+
+Confira unidades, furos, folgas e percurso antes de fabricar. A equivalÃªncia do CAD Ã© uma referÃªncia mecÃ¢nica do projeto; as especificaÃ§Ãµes elÃ©tricas utilizadas sÃ£o as do LX-225.
+
+## OrganizaÃ§Ã£o
+
+```text
+â”œâ”€â”€ README.md                    # Comece aqui
+â”œâ”€â”€ requirements.txt             # DependÃªncias Python
+â”œâ”€â”€ buslinker_v2_5.py             # Programa completo para V2.5
+â”œâ”€â”€ buslinker_v3.py               # Programa completo para V3.0
+â”œâ”€â”€ servo_testbench.py            # Fonte do driver compartilhado
+â”œâ”€â”€ bench_tools.py               # Monitoramento, cadastro e calibraÃ§Ã£o
+â”œâ”€â”€ test_servos.py                # Interface de bancada
+â”œâ”€â”€ docs/                        # InstalaÃ§Ã£o, uso e problemas
+â”‚   â””â”€â”€ datasheets/               # Manuais, esquemas e fontes oficiais
+â”œâ”€â”€ hardware/                    # CAD e suportes, com catÃ¡logo
+â”œâ”€â”€ firmware/joystick_diagnostic/ # DiagnÃ³stico do joystick/OLED
+â”œâ”€â”€ tests/                       # Testes com serial simulada
+â””â”€â”€ tools/                       # DiagnÃ³stico e geraÃ§Ã£o dos programas
 ```
 
-O cadastro fica em `servos.json`, compartilhado entre as versões. Repetir `add-id`
-com o mesmo ID atualiza o nome. Isso não muda o ID físico nem exige placa conectada.
-Use `--registry outro.json` para outro cadastro. Em `monitor` e `calibrate`, omitir
-`--ids` seleciona todos os IDs cadastrados.
+## Desenvolvimento e limites
 
-### Alterar o ID físico
+O projeto Ã© uma bancada de atuadores. Marcha, equilÃ­brio e seguranÃ§a do humanoide completo dependem da integraÃ§Ã£o. A velocidade exibida Ã© calculada entre leituras de posiÃ§Ã£o; corrente e torque nÃ£o sÃ£o medidos pelo driver. O firmware do joystick testa botÃµes e OLED e ainda nÃ£o comanda servos.
 
-Conecte **somente o servo a reconfigurar**. IDs duplicados não podem ser
-identificados de forma confiável pelo barramento; `--single-servo` declara essa
-condição física, não a detecta automaticamente.
-
-```powershell
-python buslinker_v2_5.py change-id --port COM7 --from-id 1 --to-id 3 --single-servo
-```
-
-Confere o ID atual, rejeita destino que já responde ou consta no cadastro, envia
-a alteração, verifica o novo ID e atualiza o JSON. Se a confirmação falhar, o ID
-pode já ter mudado: consulte os IDs antigo e novo antes de repetir. Uma falha ao
-salvar o cadastro depois da confirmação não desfaz o ID físico.
-
-### Teste de calibração / acompanhamento de posição
-
-```powershell
-python buslinker_v2_5.py calibrate --port COM7 --ids 1 2 --deltas -5 0 5 0 --seconds 2 --samples 5 --tolerance 2 --live
-```
-
-O teste movimenta os servos em deslocamentos relativos à posição inicial,
-limitados a ±10°. Confira espaço livre e limites mecânicos antes de executar.
-Após cada movimento, aguarda `--settle 0.5` segundos e mede cinco vezes.
-`calibracao.csv` registra alvo efetivamente enviado (quantizado em 0,24°), média
-medida, erro (medido − alvo), dispersão e aprovação pela tolerância em graus.
-O código de saída 2 indica erro acima da tolerância; 1 indica falha de execução.
-Os quatro gráficos e o CSV de telemetria também são gerados durante esse teste.
-
-O padrão percorre -5°, 0°, +5°, 0° em relação à posição inicial. Uma lista
-personalizada termina no último alvo. Em falha ou Ctrl+C, tenta parar todos os
-IDs e preserva os resultados parciais, sem tentar retornar automaticamente.
-O teste interrompe se a tensão sair de 6–8,4 V ou se a temperatura chegar a
-`--max-temp 60` °C (limiar do programa, não configuração permanente do servo).
-
-Esse ensaio usa o sensor interno: mede acompanhamento/repetibilidade, mas **não
-mede o erro absoluto do zero mecânico**. Para isso, use referência externa
-(goniômetro, alinhamento mecânico ou encoder independente).
-
-### Consultar, experimentar e gravar correção de zero
-
-```powershell
-# Consultar o offset atual
-python buslinker_v2_5.py offset --port COM7 --id 1
-# Exemplo: definir offset absoluto de 5 ticks = 1.20 grau, temporariamente
-python buslinker_v2_5.py offset --port COM7 --id 1 --ticks 5
-# Depois de conferir fisicamente o resultado, gravar o mesmo valor
-python buslinker_v2_5.py offset --port COM7 --id 1 --ticks 5 --save
-```
-
-Use o valor obtido na sua medição, não necessariamente 5. O offset aceito é um
-inteiro de -125 a +125 ticks, cada tick equivalente a 0,24°. É um valor absoluto,
-não um incremento sobre o anterior. O comando pode movimentar o eixo. Anote o
-offset anterior mostrado no terminal para restaurá-lo se necessário. Experimente
-temporariamente e confira direção/magnitude com a referência externa antes de salvar.
-
-`--save` envia o comando de gravação somente após confirmar o offset temporário
-por leitura. A leitura após salvar verifica o valor ativo; a persistência deve ser
-conferida desligando e religando a alimentação e consultando novamente. O programa
-nunca calcula nem grava automaticamente um offset a partir do erro do sensor interno.
-
-### Movimento básico
-
-Substitua COM7 pela porta da sua placa. Primeiro, teste somente as leituras:
-
-```powershell
-# BusLinker V2.5
-python buslinker_v2_5.py --port COM7 --ids 1 2
-# BusLinker V3
-python buslinker_v3.py --port COM7 --ids 1 2
-```
-
-Depois, com os servos livres e o percurso conferido, teste um deslocamento de
-5 graus em 2 segundos a partir da posição atual:
-
-```powershell
-python buslinker_v2_5.py --port COM7 --ids 1 2 --move --delta 5 --seconds 2
-```
-
-Para V3.0, use `buslinker_v3.py` no mesmo comando.
-
-Para três ou mais, acrescente os IDs em `--ids 1 2 3`. O programa verifica todos
-antes de movimentar, acompanha posição/tensão e tenta parar cada servo ao
-concluir, ocorrer falha ou receber Ctrl+C. Não retorna à posição inicial.
-Uma falha de comunicação pode impedir a parada; fechar a serial não desliga o torque.
-
-`--synchronized` usa início por broadcast: afeta **todos os movimentos pendentes
-no barramento**, inclusive de IDs não listados. Use apenas em barramento dedicado
-ao teste, sem movimentos antigos pendentes. Por padrão, o início é individual.
-Uma falha durante a preparação pode deixar comandos pendentes nos servos; não
-envie broadcast depois disso sem restabelecer um estado conhecido.
-
-Configure IDs individualmente antes de interligar servos com o ID padrão 1.
-Use alimentação externa de 6–8,4 V, dimensionada para a carga: a especificação
-informa 4 A por servo travado (8 A para dois nessa condição). Confira polaridade,
-terra comum e o modo USB/servo da revisão da sua BusLinker. Não use a tensão de
-servos de alta tensão para alimentar o LX-225.
-
-Referências: [LX-225](https://www.hiwonder.com/products/lx-225) e
-[protocolo Hiwonder](https://engineering.purdue.edu/477grp4/Team/journal/img%20-%20Juho/week7/servo%20bus%20protocol.pdf).
-
-## Validação sem hardware
+Para validar sem hardware:
 
 ```powershell
 python -m unittest discover -s tests -v
 ```
 
-Os testes usam serial simulada: pacotes, eco, respostas fragmentadas/corrompidas,
-entradas inválidas, velocidade e partida de três servos. Não comprovam o
-funcionamento elétrico/mecânico da placa ou dos servos.
+Os testes simulados verificam software e protocolo, sem certificar o funcionamento elÃ©trico/mecÃ¢nico. Para mudar os programas autÃ´nomos, edite `servo_testbench.py`, `bench_tools.py` e `test_servos.py`, depois execute `python tools/build_standalone.py`.
 
-## Limites do driver
-
-- Ângulos fora de 0–240 graus, NaN e infinito são rejeitados, sem saturação silenciosa.
-- Tempos fora de 0–30 segundos são rejeitados. Zero é permitido pelo protocolo;
-  o programa de bancada exige ao menos 0,5 segundo.
-- A velocidade é aproximada, limitada pela mecânica e pela resolução do protocolo;
-  movimentos calculados acima de 30 segundos são rejeitados.
-- As leituras retornam assim que recebem pacote válido; 45 ms é o limite de espera
-  por comando. Posição, tensão e temperatura são lidas sequencialmente.
-- Use uma única sequência de chamadas por barramento; não compartilhe a instância
-  entre threads. Não há garantias de controle em tempo real para equilíbrio.
-- O teste pressupõe modo de posição e torque habilitado. Não reconfigura isso.
-
-## Exemplo mínimo
-
-```python
-from servo_testbench import LX225Bus
-
-with LX225Bus("COM7") as bus:
-    bus.move_at_speed(5, angle_deg=90, velocity_dps=60)
-    state = bus.read_servo(5, identifier="joelho_direito")
-    print(state)
-    bus.stop(5)
-```
-
-`move_at_speed` converte velocidade em tempo de movimento, pois o protocolo do
-servo recebe posição e tempo. A velocidade retornada por `read_servo` é calculada
-entre duas leituras consecutivas.
-Na primeira leitura, a velocidade é `NaN` porque ainda não há amostra anterior.
-
-Para nomes estáveis do robô, preencha `SERVO_IDENTIFIERS` no módulo. O nome não
-altera o ID físico e permite trocar a identificação mecânica sem reescrever o
-código de controle.
-
-## Manutencao dos arquivos completos
-
-`servo_testbench.py`, `bench_tools.py` e `test_servos.py` permanecem como fontes
-de desenvolvimento. Depois de altera-los, execute `python tools/build_standalone.py`
-para atualizar os dois arquivos completos de forma identica. Alteracoes manuais
-nos arquivos gerados serao substituidas na proxima geracao. Para nomes dos servos,
-prefira o comando `add-id`, que salva em `servos.json` fora do codigo.
+Ao relatar um problema, inclua revisÃ£o da placa, modelo e IDs dos servos, sistema operacional, comando, mensagem completa e alimentaÃ§Ã£o usada.

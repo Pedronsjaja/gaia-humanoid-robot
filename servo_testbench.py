@@ -221,6 +221,49 @@ class LX225Bus:
             raise TimeoutError(result.error)
         return result.params[0]
 
+    def read_position_limits(self, servo_id: int) -> Tuple[float, float]:
+        result = self.read_command(servo_id, 21, 4)
+        if not result.ok:
+            raise TimeoutError(result.error)
+        lower, upper = struct.unpack('<HH', result.params)
+        if not 0 <= lower < upper <= 1000:
+            raise ValueError('Limites de posicao invalidos recebidos do servo.')
+        return ticks_to_deg(lower), ticks_to_deg(upper)
+
+    def read_mode(self, servo_id: int) -> int:
+        result = self.read_command(servo_id, 30, 4)
+        if not result.ok:
+            raise TimeoutError(result.error)
+        return result.params[0]
+
+    def read_torque_enabled(self, servo_id: int) -> bool:
+        result = self.read_command(servo_id, 32, 1)
+        if not result.ok:
+            raise TimeoutError(result.error)
+        if result.params[0] not in (0, 1):
+            raise ValueError('Estado de torque invalido recebido do servo.')
+        return bool(result.params[0])
+
+    def move_verified(self, servo_id: int, angle_deg: float, move_time_s: float) -> None:
+        """Move diretamente, confere o alvo e habilita torque se necessario.
+
+        Pode movimentar imediatamente. O chamador deve validar alimentacao,
+        modo e limites antes de usar e tentar parar em caso de falha.
+        """
+        expected = self._move_params(angle_deg, move_time_s)
+        self.move(servo_id, angle_deg, move_time_s)
+        result = self.read_command(servo_id, 2, 4)
+        if not result.ok:
+            raise TimeoutError(result.error)
+        if result.params != expected:
+            raise ValueError(f'ID {servo_id}: o servo nao confirmou o alvo e tempo enviados.')
+        if not self.read_torque_enabled(servo_id):
+            # Habilita somente depois de confirmar o novo alvo, evitando ativar
+            # torque com um alvo antigo desconhecido.
+            self._write(servo_id, 31, b'\x01')
+            if not self.read_torque_enabled(servo_id):
+                raise ValueError(f'ID {servo_id}: torque continua desabilitado; verifique alimentacao e protecoes.')
+
     def read_offset(self, servo_id: int) -> int:
         result = self.read_command(servo_id, 19, 1)
         if not result.ok:
@@ -343,6 +386,51 @@ class LX225Bus:
             self._write(servo_id, CMD_MOVE_TIME_WAIT_WRITE, params)
         self.start([servo_id for servo_id, _ in prepared], synchronized=synchronized)
 
+    def move_group_direct(self, targets: Iterable[Tuple[int, float, float]]) -> None:
+        """Envia alvos diretos em sequencia rapida e depois confere cada um.
+
+        Os inicios tem pequena defasagem, sem preparo nem broadcast.
+        O chamador deve conferir limites/torque e parar o grupo em falha.
+        """
+        prepared = []
+        seen = set()
+        for sid, angle, duration in targets:
+            validate_id(sid)
+            if sid in seen:
+                raise ValueError('IDs repetidos no lote.')
+            seen.add(sid)
+            prepared.append((sid, self._move_params(angle, duration)))
+        for sid, params in prepared:
+            self._write(sid, CMD_MOVE_TIME_WRITE, params)
+        for sid, params in prepared:
+            result = self.read_command(sid, 2, 4)
+            if not result.ok or result.params != params:
+                raise ValueError(f'ID {sid}: alvo direto nao confirmado apos envio ao grupo.')
+            if not self.read_torque_enabled(sid):
+                raise ValueError(f'ID {sid}: torque desabilitado durante movimento do grupo.')
+
+    def move_many_verified(self, targets: Iterable[Tuple[int, float, float]]) -> None:
+        """Confere todos os alvos preparados antes de iniciar por broadcast.
+
+        Exige barramento dedicado: o inicio afeta todos os alvos pendentes.
+        Em falha de preparo, reinicie a alimentacao antes de tentar novamente.
+        """
+        prepared = []
+        seen = set()
+        for sid, angle, duration in targets:
+            validate_id(sid)
+            if sid in seen:
+                raise ValueError('IDs repetidos no lote.')
+            seen.add(sid)
+            prepared.append((sid, self._move_params(angle, duration)))
+        for sid, params in prepared:
+            self._write(sid, CMD_MOVE_TIME_WAIT_WRITE, params)
+            result = self.read_command(sid, 8, 4)
+            if not result.ok or result.params != params:
+                raise ValueError(f'ID {sid}: alvo sincronizado nao confirmado; inicio nao enviado. '
+                                 'Reinicie a alimentacao antes de outro teste sincronizado para limpar alvos pendentes.')
+        self.start([sid for sid, _ in prepared], synchronized=True)
+
     def stop(self, servo_id: int) -> None:
         validate_id(servo_id)
         self._write(servo_id, CMD_MOVE_STOP)
@@ -373,15 +461,17 @@ class LX225Bus:
             raise ValueError("Resposta nao confirmou o novo ID; verifique o servo.")
 
     def scan_ids(self) -> List[int]:
-        """Retorna os IDs que responderem com ângulo e tensão válidos."""
+        """Consulta cada ID individualmente, sem movimento nem broadcast.
+
+        Retorna IDs que confirmam seu proprio endereco. Falhas da porta
+        interrompem a busca; IDs sem resposta sao ignorados.
+        """
         found = []
         for servo_id in range(ID_MIN, ID_MAX + 1):
             try:
-                angle = self.read_angle_deg(servo_id)
-                voltage = self.read_voltage_v(servo_id)
-                if math.isfinite(angle) and math.isfinite(voltage):
+                if self.read_id(servo_id) == servo_id:
                     found.append(servo_id)
-            except (TimeoutError, serial.SerialException, struct.error):
+            except TimeoutError:
                 continue
         return found
 

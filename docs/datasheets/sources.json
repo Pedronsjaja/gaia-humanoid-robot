@@ -1,0 +1,30 @@
+[
+  {
+    "file": "buslinker-v2.5-manual.pdf",
+    "source": "https://drive.google.com/file/d/11u-8naW1CRMcVgWS1chedrtZbrX5WXIL/view",
+    "retrieved": "2026-09-20",
+    "bytes": 1808230,
+    "sha256": "32a4ead019437530926803e0928cd53507613d0e7dfaeeb846bde5dc438ad2b5"
+  },
+  {
+    "file": "buslinker-v3.0-manual.pdf",
+    "source": "https://drive.google.com/file/d/1KueoY3lZ_0ceOeIImEY3QQmsVx9S1XFP/view",
+    "retrieved": "2026-09-20",
+    "bytes": 4572889,
+    "sha256": "db52fea8c246482df44a394279f4f71136d8922de0f61ae84904290587903988"
+  },
+  {
+    "file": "buslinker-v3.0-esquema.pdf",
+    "source": "https://drive.google.com/file/d/1FLC4dy0MArV2XjpEt_cQ-ok0V5BSH92u/view",
+    "retrieved": "2026-09-20",
+    "bytes": 50098,
+    "sha256": "e8e7ac6404f5e946d7ed05fbdd0968ccb5c60d0ad5f0e9f04a806e16207c6b20"
+  },
+  {
+    "file": "buslinker-v2.5-esquema.jpg",
+    "source": "https://drive.google.com/file/d/1oa65bJ0ezJcTZdBPqjSolm7HpEHCe0Fz/view",
+    "retrieved": "2026-09-20",
+    "bytes": 141630,
+    "sha256": "ed9737bc208d1c7ce1d50f008dc433948c0c2685a6e37cb94dce72ceb71c3f2e"
+  }
+]

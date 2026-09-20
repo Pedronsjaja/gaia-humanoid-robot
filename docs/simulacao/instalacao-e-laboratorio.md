@@ -4,7 +4,7 @@
 
 Pré-requisito: Ubuntu **24.04**, ROS 2 **Jazzy** e teste talker/listener aprovado pelo [guia de ambiente](https://github.com/Pedronsjaja/gaia-ros2-ubuntu24). Execute no Bash do Ubuntu. Não há hardware físico nesta aula.
 
-**Estado do roteiro:** modelo expandido e testes do adaptador aprovados; execução física/gráfica ainda pendente. Use a [ficha de validação](validacao.md) para registrar o primeiro ensaio.
+**Estado do roteiro:** compilação, modelo, sensores e trajetória da cabeça aprovados em Linux/Gazebo sem janela. Inspeção visual e desempenho no seu computador ainda precisam ser verificados. Veja a [evidência e ficha de validação](validacao.md).
 
 ## 1. Instalar Gazebo e integração
 

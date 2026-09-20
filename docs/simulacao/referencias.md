@@ -45,7 +45,7 @@ Modelos são baixados do fabricante e mantêm suas licenças. O código novo em 
 
 A expansão do modelo oficial e cinco testes do adaptador passaram localmente. A bancada tem 47 testes aprovados com serial simulada.
 
-A automação Linux compila e verifica o modelo, sem executar a física/renderização. A execução gráfica, os sensores em runtime e o desempenho ainda precisam ser validados nos PCs da equipe. Marcha autônoma e interface ROS/LX-225 não estão implementadas.
+A [integração Linux](https://github.com/Pedronsjaja/gaia-humanoid-robot/actions/runs/35541058398) também passou: compilação, sensores e movimento da cabeça com retorno a zero no Gazebo sem janela. A inspeção visual e o desempenho ainda precisam ser validados nos PCs da equipe. Marcha autônoma e interface ROS/LX-225 não estão implementadas.
 
 Consulte o [registro de validação e ficha de ensaio](validacao.md) e o [resultado da automação](https://github.com/Pedronsjaja/gaia-humanoid-robot/actions/workflows/simulation.yml).
 

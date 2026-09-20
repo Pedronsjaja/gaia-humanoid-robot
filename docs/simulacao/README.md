@@ -40,3 +40,7 @@ O laboratório **não carrega op3_manager**, não usa a BusLinker e não abre po
 Na revisão inspecionada de `ROBOTIS-OP3-Common/jazzy-devel`, o Xacro principal tem a inclusão de configuração de simulação comentada e não gera `ros2_control`. O lançador oficial de simulação solicita controladores, mas o modelo dessa revisão não contém a integração correspondente. O adaptador daqui completa essa configuração em memória e mantém os arquivos ROBOTIS intactos. [Evidências e revisões](referencias.md).
 
 A configuração do laboratório é didática. Limites do modelo OP3 e atuação ideal por posição não representam fielmente os motores LX-225. Marcha, equilíbrio e autonomia não estão implementados neste pacote.
+
+## Validação
+
+O laboratório passou em compilação e ensaio Linux sem janela, incluindo sensores e movimento da cabeça com retorno a zero. Veja o [registro e os limites da validação](validacao.md).

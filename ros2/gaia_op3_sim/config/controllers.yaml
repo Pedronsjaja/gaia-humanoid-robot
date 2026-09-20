@@ -1,0 +1,35 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100
+    use_sim_time: true
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+    joint_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+joint_trajectory_controller:
+  ros__parameters:
+    use_sim_time: true
+    joints:
+      - r_sho_pitch
+      - l_sho_pitch
+      - r_sho_roll
+      - l_sho_roll
+      - r_el
+      - l_el
+      - r_hip_yaw
+      - l_hip_yaw
+      - r_hip_roll
+      - l_hip_roll
+      - r_hip_pitch
+      - l_hip_pitch
+      - r_knee
+      - l_knee
+      - r_ank_pitch
+      - l_ank_pitch
+      - r_ank_roll
+      - l_ank_roll
+      - head_pan
+      - head_tilt
+    command_interfaces: [position]
+    state_interfaces: [position, velocity]
+    allow_partial_joints_goal: true

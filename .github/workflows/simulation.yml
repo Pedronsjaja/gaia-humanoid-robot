@@ -1,0 +1,36 @@
+name: ROS 2 simulation build
+on:
+  push:
+    paths: ['ros2/**', 'simulation/**', '.github/workflows/simulation.yml']
+  pull_request:
+    paths: ['ros2/**', 'simulation/**', '.github/workflows/simulation.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    container: ros:jazzy-ros-base
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          apt-get update
+          apt-get install -y git python3-pytest python3-yaml ros-dev-tools ros-jazzy-xacro ros-jazzy-ros-gz ros-jazzy-gz-ros2-control ros-jazzy-ros2-controllers ros-jazzy-robot-state-publisher
+      - name: Build and test pinned OP3 adapter
+        run: |
+          source /opt/ros/jazzy/setup.bash
+          mkdir -p /tmp/gaia_ws/src
+          ln -s "$GITHUB_WORKSPACE" /tmp/gaia_ws/src/gaia-humanoid-robot
+          cd /tmp/gaia_ws
+          vcs import src < "$GITHUB_WORKSPACE/simulation/op3.repos"
+          rosdep update
+          rosdep install --from-paths src --ignore-src --rosdistro jazzy -y
+          colcon build --packages-up-to gaia_op3_sim --event-handlers console_direct+
+          source install/setup.bash
+          python3 -m unittest discover -s "$GITHUB_WORKSPACE/ros2/gaia_op3_sim/test" -v
+          ros2 launch gaia_op3_sim lab.launch.py --show-args

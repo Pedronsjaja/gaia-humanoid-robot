@@ -23,3 +23,11 @@ resultados_lx225/
 # Arquivos temporarios
 *.tmp
 *.bak
+
+# ROS build outputs and experiment recordings
+build/
+install/
+log/
+*.db3
+*.mcap
+*.egg-info/

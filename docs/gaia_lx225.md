@@ -134,3 +134,9 @@ Este modulo ainda nao define:
 
 Esses dados devem entrar em uma configuracao propria do Gaia, sem alterar o
 protocolo de comunicacao dos drivers.
+
+## Guias complementares da equipe
+
+[Programação](programacao/README.md) · [Simulação OP3](simulacao/README.md) · [Modelo Gaia](simulacao/modelo-gaia.md) · [Autonomia](simulacao/autonomia.md) · [CBR Humanoid](competicao/README.md).
+
+A bancada serial é a base para a futura integração ROS/LX-225. O adaptador OP3 de simulação não implementa essa ponte e não substitui a caracterização dos atuadores reais.

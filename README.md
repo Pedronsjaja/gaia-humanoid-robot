@@ -1,134 +1,103 @@
-# Gaia â€” servos LX-225, BusLinker e peÃ§as mecÃ¢nicas
+# Gaia — humanoide para futebol de robôs
 
-Ferramentas de bancada dos atuadores do humanoide **Gaia**: controle Python de servos Hiwonder LX-225 com BusLinker V2.5 ou V3.0, leitura de sensores, grÃ¡ficos, configuraÃ§Ã£o de IDs, calibraÃ§Ã£o e arquivos mecÃ¢nicos.
+Este é o ponto de encontro da equipe **Gaia** para desenvolver um humanoide com servos **LX-225**, estudar o **ROBOTIS OP3** e avançar rumo à autonomia na **CBR, categoria Humanoid**.
 
-**Comece com um Ãºnico servo:** confirme a comunicaÃ§Ã£o, teste um movimento pequeno e sÃ³ depois monte o barramento com vÃ¡rios IDs.
+**Novo no GitHub?** Comece pelo [guia de navegação](docs/primeiros-passos-github.md). Você pode ler tudo pelo navegador: clique nos links e nas pastas; o README é a página inicial de cada área.
 
-## Encontre o que vocÃª precisa
+## Escolha sua área
 
-| Queroâ€¦ | Abrir |
+| Área | Comece aqui | O que você encontrará |
+| --- | --- | --- |
+| Programação | [Trilha de programação](docs/programacao/README.md) | Python, ROS 2, simulação, sensores e autonomia |
+| Estrutura | [Trilha de estrutura](docs/estrutura/README.md) | CAD do servo LX-224/LX-225, suportes, fabricação e modelo do robô |
+| Eletrônica | [Trilha de eletrônica](docs/eletronica/README.md) | BusLinker V2.5/V3, alimentação, drivers e diagnóstico |
+| Competição | [CBR Humanoid](docs/competicao/README.md) | Regulamentos, limitações e requisitos pendentes |
+
+## Roteiro para entrar na equipe
+
+1. Leia o [guia GitHub](docs/primeiros-passos-github.md): baixar arquivos, acompanhar alterações e registrar dúvidas.
+2. Conheça os [objetivos e etapas da autonomia](docs/simulacao/autonomia.md).
+3. Para programação ROS, prepare o computador pelo repositório separado [Gaia — Ubuntu 24.04 e ROS 2 Jazzy](https://github.com/Pedronsjaja/gaia-ros2-ubuntu24). Ele explica dual boot e máquina virtual.
+4. Volte aqui e faça o [laboratório OP3 no Gazebo Harmonic](docs/simulacao/instalacao-e-laboratorio.md): carregar o modelo, comandar a cabeça, ler câmera e IMU.
+5. Para trabalho físico, siga primeiro a [instalação da bancada com um servo](docs/instalacao.md).
+6. Antes de fechar dimensões ou comprar sensores, consulte a [matriz de requisitos da CBR](docs/competicao/matriz-requisitos.md).
+
+## Acesso rápido
+
+| Quero… | Abrir |
 | --- | --- |
-| Instalar do zero e identificar a porta USB | [Tutorial de instalaÃ§Ã£o](docs/instalacao.md) |
-| Baixar datasheets, manuais e esquemas | [DocumentaÃ§Ã£o tÃ©cnica V2.5, V3 e LX-225](docs/datasheets/README.md) |
-| Instalar software Hiwonder ou driver USB | [Softwares e drivers](docs/softwares-e-drivers.md) |
-| Ler sensores, mover, gerar grÃ¡ficos ou calibrar | [Manual dos comandos Python](docs/uso.md) |
-| Resolver erros de comunicaÃ§Ã£o ou movimento | [SoluÃ§Ã£o de problemas](docs/solucao-de-problemas.md) |
-| Baixar CAD LX-224/LX-225 e suportes | [CatÃ¡logo mecÃ¢nico](hardware/README.md) |
-| Integrar os atuadores no humanoide | [Arquitetura Gaia](docs/gaia_lx225.md) |
-| Montar joystick e display ESP32-S3 | [Guia do joystick](docs/joystick.md) |
+| Instalar e usar BusLinker V2.5 ou V3 | [Instalação](docs/instalacao.md) · [Comandos Python](docs/uso.md) |
+| Datasheets, manuais e esquemas | [Documentação técnica](docs/datasheets/README.md) |
+| Softwares Hiwonder e drivers USB | [Downloads e instalação](docs/softwares-e-drivers.md) |
+| Resolver erros de comunicação/movimento | [Solução de problemas](docs/solucao-de-problemas.md) |
+| CAD e suportes para impressão | [Catálogo mecânico](hardware/README.md) |
+| Simular no Linux | [Simulação](docs/simulacao/README.md) |
+| Entender como criar o modelo Gaia | [CAD → URDF → simulação](docs/simulacao/modelo-gaia.md) |
+| Integrar LX-225 | [Arquitetura de atuadores](docs/gaia_lx225.md) |
+| Joystick e OLED ESP32-S3 | [Guia do joystick](docs/joystick.md) |
+| Consultar regras e documentos locais | [Competição e fontes](docs/competicao/fontes.md) |
 
-## Como funciona
+## O que já existe e o que ainda falta
+
+| Parte | Estado |
+| --- | --- |
+| Bancada Python LX-225 | Comunicação, sensores, gráficos, IDs e calibração; testes de software com serial simulada |
+| BusLinker | Programas independentes [V2.5](buslinker_v2_5.py) e [V3](buslinker_v3.py), documentação e diagnóstico |
+| Estrutura | CAD compartilhado LX-224/LX-225 e suportes catalogados em [hardware](hardware/README.md) |
+| Simulação | Adaptador didático OP3 com base presa, controladores e sensores; conferir [validação e versões](docs/simulacao/referencias.md) |
+| Modelo completo Gaia | Ainda precisa de montagem, massas, inércias, eixos e limites medidos |
+| Autonomia | Plano de evolução; percepção de futebol, equilíbrio, marcha e ponte ROS/LX-225 ainda precisam ser implementados |
+| CBR | Categoria Humanoid escolhida; subcategoria, edição e regulamento aplicável pendentes |
+
+O OP3 é referência de estudo. Seus atuadores DYNAMIXEL, massas e controladores não equivalem automaticamente ao Gaia com LX-225. O laboratório inicial suspende o robô para aprender comandos e sensores; ele não demonstra marcha nem habilitação para competir.
+
+## Como as partes se conectam
 
 ```mermaid
 flowchart LR
-    PC[Computador com Python] -->|USB de dados| B[BusLinker V2.5 ou V3.0]
-    F[Fonte externa para LX-225] -->|AlimentaÃ§Ã£o| B
-    B <-->|Barramento TTL| S1[Servo ID 1]
-    S1 <-->|Mesmo barramento| S2[Servo ID 2]
+    Sensores[Câmera, IMU e juntas] --> ROS[ROS 2: mensagens e ferramentas]
+    ROS --> Autonomia[Percepção, estado e decisão]
+    Autonomia --> Movimento[Planejamento, equilíbrio e movimento]
+    Movimento --> Sim[Gazebo: robô virtual]
+    Movimento --> Ponte[Ponte ROS para LX-225: a desenvolver]
+    Ponte --> Placa[BusLinker e servos]
+    Estrutura[Estrutura e parâmetros medidos] --> Sim
+    Estrutura --> Placa
 ```
 
-A **BusLinker** conecta o computador ao barramento. O **driver USB** faz aparecer a porta COM no sistema. Os **scripts Python** enviam comandos pela porta; cada servo tem um ID. O LX-225 recebe comandos seriais, nÃ£o pulsos de um controlador de servo PWM convencional.
+O **Gazebo** simula física e sensores. O **ROS 2** conecta programas, organiza mensagens e oferece ferramentas de inspeção. A equipe desenvolve os algoritmos que percebem o jogo e escolhem ações. Veja os [marcos de autonomia](docs/simulacao/autonomia.md).
 
-**Alimente o LX-225 com 6â€“8,4 V.** A corrente de travamento informada Ã© 4 A por servo: considere picos simultÃ¢neos, cabos e conectores ao dimensionar a alimentaÃ§Ã£o. A tensÃ£o mÃ¡xima aceita pela placa nÃ£o Ã© a tensÃ£o mÃ¡xima do servo. [EspecificaÃ§Ãµes Hiwonder](https://www.hiwonder.com/products/lx-225).
-
-## Primeiro teste no Windows
-
-VocÃª precisa de uma BusLinker, um LX-225, cabo de servo, cabo USB **de dados**, fonte apropriada e Python. O [tutorial completo](docs/instalacao.md) explica as conexÃµes e a instalaÃ§Ã£o.
-
-1. Baixe o repositÃ³rio em **Code â†’ Download ZIP** e extraia tudo, ou clone pelo endereÃ§o mostrado em **Code**. Abra um terminal na pasta deste README.
-2. Crie o ambiente e instale as dependÃªncias:
-
-   ```powershell
-   python -m venv .venv
-   .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-   ```
-
-3. Com a alimentaÃ§Ã£o desligada, conecte um servo e confira polaridade, conector e seleÃ§Ã£o USB da sua revisÃ£o. Ligue a fonte e conecte o USB. Feche os outros programas que usam a serial e identifique a porta:
-
-   ```powershell
-   .\.venv\Scripts\python.exe -m serial.tools.list_ports -v
-   ```
-
-4. Substitua `COM7` pela porta identificada e execute **apenas o comando da sua placa**:
-
-   ```powershell
-   # BusLinker V2.5 â€” somente leitura
-   .\.venv\Scripts\python.exe buslinker_v2_5.py --port COM7 --scan
-   # BusLinker V3.0 â€” somente leitura
-   .\.venv\Scripts\python.exe buslinker_v3.py --port COM7 --scan
-   ```
-
-A busca percorre IDs de 0 a 253 e mostra os que responderam, com posiÃ§Ã£o, tensÃ£o e temperatura. Se nada responder, siga o [diagnÃ³stico](docs/solucao-de-problemas.md). IDs duplicados nÃ£o permitem contar separadamente os servos fÃ­sicos.
-
-5. Confira o percurso mecÃ¢nico antes de mover. Exemplo para **ID 1 e V3**:
-
-   ```powershell
-   .\.venv\Scripts\python.exe buslinker_v3.py --port COM7 --ids 1 --move --delta 5 --seconds 2
-   ```
-
-Isso solicita **+5Â° a partir da posiÃ§Ã£o atual**, em 2 segundos, sem retorno automÃ¡tico. O teste verifica modo de posiÃ§Ã£o, limites e tensÃ£o; pode habilitar torque. `Ctrl+C` tenta parar o servo, mas uma falha de comunicaÃ§Ã£o pode impedir a parada. Fechar o programa nÃ£o desliga o torque.
-
-## Qual arquivo executar?
-
-| Placa | Arquivo autÃ´nomo | Classe para importar |
-| --- | --- | --- |
-| BusLinker V2.5 | [buslinker_v2_5.py](buslinker_v2_5.py) | `BusLinkerV2_5` |
-| BusLinker V3.0 | [buslinker_v3.py](buslinker_v3.py) | `BusLinkerV3` |
-
-Cada arquivo inclui comunicaÃ§Ã£o, menu, grÃ¡ficos, IDs e calibraÃ§Ã£o. Pode ser copiado sozinho, desde que `pyserial` e `matplotlib` estejam instalados. Os dois usam o protocolo LX-225 a **115200 baud**. O nome V3 nÃ£o ativa protocolos de outros modelos de servo.
-
-Com o ambiente virtual ativo, exemplos para V3:
-
-```powershell
-# Menu de consulta e movimento solicitado pelo usuÃ¡rio
-python buslinker_v3.py --interactive --port COM7 --ids 1
-# GrÃ¡ficos e CSV, sem movimentar
-python buslinker_v3.py monitor --port COM7 --ids 1 --duration 30 --live
-# Nome local da junta; nÃ£o muda o ID fÃ­sico
-python buslinker_v3.py add-id --id 1 --name joelho_esquerdo
-```
-
-O monitor salva dados em `resultados/`; os nomes ficam em `servos.json`. Ambos sÃ£o locais e ignorados pelo Git. Veja [uso avanÃ§ado](docs/uso.md) para troca de ID fÃ­sico, calibraÃ§Ã£o, offset e sincronizaÃ§Ã£o.
-
-## CAD e suportes
-
-O [catÃ¡logo mecÃ¢nico](hardware/README.md) reÃºne o CAD compartilhado LX-224/LX-225 informado pelo mantenedor, a montagem SolidWorks e os suportes em Inventor, STEP e STL.
-
-- **Montagem do servo:** [CAD LX-224/LX-225](hardware/cad/servo-lx224-lx225/).
-- **Imprimir suportes:** [STL](hardware/suportes/gaia-3d/STL/).
-- **Adaptar em CAD:** [STEP](hardware/suportes/gaia-3d/STEP/).
-- **PeÃ§as nativas:** [Inventor Gaia 3D](hardware/suportes/gaia-3d/IPT/) e [peÃ§as LX-225](hardware/suportes/pecas-lx225/).
-
-Confira unidades, furos, folgas e percurso antes de fabricar. A equivalÃªncia do CAD Ã© uma referÃªncia mecÃ¢nica do projeto; as especificaÃ§Ãµes elÃ©tricas utilizadas sÃ£o as do LX-225.
-
-## OrganizaÃ§Ã£o
+## Onde estão os arquivos?
 
 ```text
-â”œâ”€â”€ README.md                    # Comece aqui
-â”œâ”€â”€ requirements.txt             # DependÃªncias Python
-â”œâ”€â”€ buslinker_v2_5.py             # Programa completo para V2.5
-â”œâ”€â”€ buslinker_v3.py               # Programa completo para V3.0
-â”œâ”€â”€ servo_testbench.py            # Fonte do driver compartilhado
-â”œâ”€â”€ bench_tools.py               # Monitoramento, cadastro e calibraÃ§Ã£o
-â”œâ”€â”€ test_servos.py                # Interface de bancada
-â”œâ”€â”€ docs/                        # InstalaÃ§Ã£o, uso e problemas
-â”‚   â””â”€â”€ datasheets/               # Manuais, esquemas e fontes oficiais
-â”œâ”€â”€ hardware/                    # CAD e suportes, com catÃ¡logo
-â”œâ”€â”€ firmware/joystick_diagnostic/ # DiagnÃ³stico do joystick/OLED
-â”œâ”€â”€ tests/                       # Testes com serial simulada
-â””â”€â”€ tools/                       # DiagnÃ³stico e geraÃ§Ã£o dos programas
+docs/
+  primeiros-passos-github.md
+  programacao/         # Trilha de software
+  estrutura/           # Trilha mecânica
+  eletronica/          # Trilha eletrônica
+  simulacao/           # Instalação, modelo e autonomia
+  competicao/          # CBR, fontes e matriz de requisitos
+  datasheets/          # Manuais e esquemas
+hardware/              # CAD e suportes originais, com catálogo
+ros2/gaia_op3_sim/      # Pacote do laboratório virtual
+simulation/op3.repos   # Revisão fixa do modelo ROBOTIS
+firmware/              # Diagnóstico joystick/OLED
+tests/                 # Testes dos scripts de bancada
+tools/                 # Diagnóstico e geração dos programas
+buslinker_v2_5.py       # Programa independente V2.5
+buslinker_v3.py         # Programa independente V3
 ```
 
-## Desenvolvimento e limites
+Os arquivos 3D do humanoide ficam neste repositório, junto da documentação e das interfaces mecânicas. O ambiente Ubuntu/ROS 2 fica em outro repositório porque serve a vários projetos da equipe. Baixe a montagem CAD com suas dependências, conforme o catálogo.
 
-O projeto Ã© uma bancada de atuadores. Marcha, equilÃ­brio e seguranÃ§a do humanoide completo dependem da integraÃ§Ã£o. A velocidade exibida Ã© calculada entre leituras de posiÃ§Ã£o; corrente e torque nÃ£o sÃ£o medidos pelo driver. O firmware do joystick testa botÃµes e OLED e ainda nÃ£o comanda servos.
+## Como colaborar
 
-Para validar sem hardware:
+Use **Issues** para dúvidas, defeitos e tarefas; informe sua área, objetivo, revisão, passos e evidências. Para propor mudanças, crie uma branch e uma **Pull Request**. O [guia GitHub](docs/primeiros-passos-github.md) explica esses termos e mostra o caminho.
+
+Validação da bancada, sem conectar servos:
 
 ```powershell
 python -m unittest discover -s tests -v
 ```
 
-Os testes simulados verificam software e protocolo, sem certificar o funcionamento elÃ©trico/mecÃ¢nico. Para mudar os programas autÃ´nomos, edite `servo_testbench.py`, `bench_tools.py` e `test_servos.py`, depois execute `python tools/build_standalone.py`.
-
-Ao relatar um problema, inclua revisÃ£o da placa, modelo e IDs dos servos, sistema operacional, comando, mensagem completa e alimentaÃ§Ã£o usada.
+Os programas autônomos são gerados a partir de `servo_testbench.py`, `bench_tools.py` e `test_servos.py` por `python tools/build_standalone.py`. Testes de software não substituem ensaios elétricos, mecânicos ou a inspeção da competição.

@@ -1,0 +1,25 @@
+{
+  "documents": [
+    {
+      "file": "cbr-humanoid-2025.pdf",
+      "source_url": "https://cbr.robocup.org.br/wp-content/uploads/2025/07/CBR2025-Humanoid.pdf",
+      "consulted_at": "2026-09-20",
+      "status": "historical; current CBR applicability unconfirmed",
+      "sha256": "a5c614dc9d9515791edc6927ae567b5cec8b46981012a5169d169e0692c4befb",
+      "bytes": 931001
+    },
+    {
+      "file": "humanoid-league-2025.pdf",
+      "source_url": "https://humanoid.robocup.org/wp-content/uploads/RC-HL-2025-Rules.pdf",
+      "consulted_at": "2026-09-20",
+      "status": "historical; current CBR applicability unconfirmed",
+      "sha256": "2b121471f2fa018964986f65a2d13ce30329f17a1dc1705c36d7c01ad43ec7bf",
+      "bytes": 6344803
+    }
+  ],
+  "unavailable_current_link": {
+    "url": "https://cbr.robocup.org.br/wp-content/uploads/2026/08/RC-HL-2025-Rules.pdf",
+    "http_status": 404,
+    "checked_at": "2026-09-20"
+  }
+}

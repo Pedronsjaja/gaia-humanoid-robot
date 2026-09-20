@@ -6,6 +6,7 @@ from rclpy.qos import qos_profile_sensor_data
 from sensor_msgs.msg import JointState, Image, CameraInfo, Imu
 from rosgraph_msgs.msg import Clock
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+from controller_manager_msgs.srv import ListControllers
 
 
 def main():
@@ -33,7 +34,8 @@ def main():
             if predicate():
                 print('PASS:', description, flush=True)
                 return
-        raise RuntimeError(description + '; received: ' + ', '.join(received))
+        raise RuntimeError(description + '; head_pan=' + str(joint_position())
+                           + '; received: ' + ', '.join(received))
 
     def joint_position():
         msg = received.get('joints')
@@ -48,7 +50,19 @@ def main():
         assert received['image'].header.frame_id == 'gaia_camera_optical_frame'
         assert received['camera_info'].width == 320
         assert received['imu'].header.frame_id == 'body_link'
-        wait_until(lambda: publisher.get_subscription_count() > 0, 30, 'trajectory subscriber')
+        client = node.create_client(ListControllers, '/controller_manager/list_controllers')
+        wait_until(client.service_is_ready, 30, 'controller manager service')
+        deadline = time.monotonic() + 60
+        while time.monotonic() < deadline:
+            future = client.call_async(ListControllers.Request())
+            wait_until(future.done, 15, 'controller state response')
+            states = {c.name: c.state for c in future.result().controller}
+            if states.get('joint_trajectory_controller') == 'active':
+                break
+            rclpy.spin_once(node, timeout_sec=0.5)
+        else:
+            raise RuntimeError('trajectory controller did not become active')
+        wait_until(lambda: publisher.get_subscription_count() > 0, 30, 'active trajectory subscriber')
         for target in (0.15, 0.0):
             msg = JointTrajectory()
             msg.joint_names = ['head_pan']
